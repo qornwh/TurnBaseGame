@@ -35,24 +35,8 @@ public class GameManager : MonoBehaviour
         PlayerId = 1;
         PlayerList = new List<PlayerState>();
         TeamDic = new Dictionary<int, List<PlayerState>>();
-        PlayerList.Add(new PlayerState()
-        {
-            PlayerID = 1,
-            CharacterData = GameDataManager.GetCharacter(100),
-            Hp = 100,
-            Mp = 100,
-            Team = 1,
-            IsAi = false,
-        });
-        PlayerList.Add(new PlayerState()
-        {
-            PlayerID = 2,
-            CharacterData = GameDataManager.GetCharacter(200),
-            Hp = 100,
-            Mp = 100,
-            Team = 2,
-            IsAi = true,
-        });
+        PlayerList.Add(new PlayerState(1, 0,0,1, false, GameDataManager.GetCharacter(100)));
+        PlayerList.Add(new PlayerState(2, 7, 5, 2, true, GameDataManager.GetCharacter(200)));
         TeamDic.Add(1, PlayerList.Where(p => p.Team == 1).ToList());
         TeamDic.Add(2, PlayerList.Where(p => p.Team == 2).ToList());
 

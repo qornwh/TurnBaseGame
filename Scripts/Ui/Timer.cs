@@ -30,4 +30,9 @@ public class Timer : MonoBehaviour
             enabled = false; // 타이머 업데이트 중지
         }
     }
+
+    private void OnDestroy()
+    {
+        OnTimerEnd = null; // 소멸할때 제거한다.
+    }
 }

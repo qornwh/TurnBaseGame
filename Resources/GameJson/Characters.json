@@ -131,17 +131,17 @@
     {
       "code": 0,
       "name": "plain",
-      "mapPath": ""
+      "path": "GameResources/00_Prefab/04_Map/map01_plain 1"
     },
     {
       "code": 1,
       "name": "desert",
-      "mapPath": ""
+      "path": "GameResources/00_Prefab/04_Map/map02_desert"
     },
     {
       "code": 2,
       "name": "cave",
-      "mapPath": ""
+      "path": "GameResources/00_Prefab/04_Map/map03_cave"
     }
   ],
   "maps": [

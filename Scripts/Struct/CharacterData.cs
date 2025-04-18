@@ -39,15 +39,7 @@ public class CharacterData
         if (skillIndex >= 0 && skillIndex < Skills.Count)
         {
             SkillData skill = Skills[skillIndex];
-            if (mp >= skill.manaCost)
-            {
-                skill.UseSkill();
-                mp -= skill.manaCost;
-            }
-            else
-            {
-                Debug.Log($"Not enough mana to use skill {skill.name}!");
-            }
+            skill.UseSkill();
         }
         else
         {

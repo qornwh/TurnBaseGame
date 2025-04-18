@@ -11,7 +11,7 @@ public class CommonButton : MonoBehaviour
     public void Init(string text, Action onClickAction)
     {
         buttonText.text = text;
-        button.onClick.RemoveAllListeners(); // Clear previous listeners
+        button.onClick.RemoveAllListeners();
         if (onClickAction != null)
             button.onClick.AddListener(() => onClickAction?.Invoke());
     }
