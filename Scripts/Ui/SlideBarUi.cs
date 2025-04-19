@@ -16,6 +16,7 @@ public class SlideBarUi : MonoBehaviour
     {
         this.maxVal = maxVal;
         curVal = maxVal;
+        UpdatePersent(curVal);
     }
 
     public void UpdatePersent(int curVal)

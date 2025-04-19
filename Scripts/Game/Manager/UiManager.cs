@@ -27,4 +27,15 @@ public class UiManager
         GameObject doneUiInstance = gm.SpawnPrefab(doneUiPrefabPath);
         doneUiInstance.SetActive(true);
     }
+
+    public GameObject GetUi(string uiName)
+    {
+        if (!UiDic.ContainsKey(uiName))
+        {
+            var gm = GameInstance.GetInstance().GameManager;
+            GameObject uiInstance = gm.SpawnPrefab(uiName);
+            UiDic.Add(uiName, uiInstance);  
+        }
+        return UiDic[uiName];
+    }
 }

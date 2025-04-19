@@ -9,9 +9,9 @@ public class Player : MonoBehaviour
     public int PlayerId { get; set; }
     public int Type { get; set; }
 
-    public void Init(PlayerState characterData, Vector3 position)
+    public void Init(PlayerState state, Vector3 position)
     {
-        PlayerState = characterData;
+        PlayerState = state;
         PlayerState.OnMoveAction += PlayMoveAction;
         PlayerState.OnSkillAction += PlaySkillAction;
         gameObject.transform.position = position;
@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
         var tileManager = gm.TileManager;
         var newPosition = tileManager.GetTilePosition(col, row);
         gameObject.transform.position = newPosition;
+
+        PlayerState.Move = 4;
     }
 
     void PlaySkillAction(int skillCode)

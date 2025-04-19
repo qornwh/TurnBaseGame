@@ -8,7 +8,6 @@ public class PlayerState : StateBase
     public int PlayerID { get; set; }
     public int MaxHp { get; set; }
     public int MaxMp { get; set; }
-    public int MaxSh { get; set; }
     public int PosX { get; set; }
     public int PosY { get; set; }
     public int Team { get; set; }
@@ -44,9 +43,9 @@ public class PlayerState : StateBase
         Hp = characterData.hp;
         MaxMp = characterData.mp;
         Mp = characterData.mp;
-        MaxSh = characterData.sh;
         Sh = characterData.sh;
         Move = characterData.move;
+        SkillLevel = 1;
         PosX = posX;
         PosY = posY;
         Team = team;
@@ -59,10 +58,21 @@ public class PlayerState : StateBase
         OnUpdateStatusAction(); // 버프가 등록되면 한번 호출
     }
 
-    public void RemoveBuff(PlayerBuffState buff)
+    public void TurnUpdate()
     {
-        buff.UpdateStatusAction -= OnUpdateStatusAction;
-        OnUpdateStatusAction(); // 버프가 꺼지면 한번 호출
+        for (int i = PlayerBuffStates.Count - 1; i >= 0; i--)
+        {
+            var buff = PlayerBuffStates[i];
+            if (buff.IsTurn)
+            {
+                --buff.TurnCount;
+                if (buff.TurnCount == 0)
+                {
+                    PlayerBuffStates.RemoveAt(i);
+                }
+            }
+        }
+        OnUpdateStatusAction(); // 턴 종료시 한번 호출해 준다.
     }
 
     public bool IsDead()

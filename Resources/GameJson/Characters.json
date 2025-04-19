@@ -12,7 +12,8 @@
       "move": 2,
       "mpRegen": 100,
       "skillIds": [101, 102],
-      "description": ""
+      "description": "",
+      "path": "Images/Profile/100"
     },
     {
       "name": "Teruka",
@@ -24,7 +25,8 @@
       "move": 2,
       "mpRegen": 20,
       "skillIds": [101, 202],
-      "description": ""
+      "description": "",
+      "path": "Images/Profile/200"
     },
     {
       "name": "ebeluna",
@@ -36,7 +38,8 @@
       "move": 3,
       "mpRegen": 20,
       "skillIds": [101, 302],
-      "description": ""
+      "description": "",
+      "path": "Images/Profile/300"
     }
   ],
   "skills": [

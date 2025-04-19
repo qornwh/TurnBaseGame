@@ -23,6 +23,7 @@ public class CharacterData
     public int mpRegen;
     public List<int> skillIds;
     public string description;
+    public string path;
 
     // 스킬 목록
     public List<SkillData> Skills { get; set; } = new List<SkillData>();

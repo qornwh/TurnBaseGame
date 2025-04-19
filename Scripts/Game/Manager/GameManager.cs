@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     [FormerlySerializedAs("BlockBase")][SerializeField] private BlockBase blockBase;
     [FormerlySerializedAs("MouseHover")][SerializeField] private MouseHover mouseHover;
+    [FormerlySerializedAs("MouseHover")][SerializeField] private PlayerUi playerUi;
     private BlockState<BlockBase> _selectedBlock; // 이동할 블록
     private Dictionary<string, Sprite> SpriteMap { get; set; }
 
@@ -51,6 +52,8 @@ public class GameManager : MonoBehaviour
                 var tilePosition = TileManager.GetTilePosition(playerState.PosX, playerState.PosY);
                 TileManager.RootBlockStates[playerState.PosY][playerState.PosX].Type = BlockType.Player;
                 player.Init(playerState, tilePosition);
+
+                playerUi.Init(playerState);
             }
         }
 
@@ -151,7 +154,7 @@ public class GameManager : MonoBehaviour
             if (TurnSystem.GetCurrentPlayerId() == PlayerId)
             {
                 // 내 플레이어인 경우
-                MoveTurn(4);
+                MoveTurn(playerState.Move);
                 UiManager.CreateDoneUi();
             }
             else
@@ -290,12 +293,12 @@ public class GameManager : MonoBehaviour
 
     public void ShowUi(String uiName)
     {
-        UiManager.UiDic[uiName].SetActive(true);
+        UiManager.GetUi(uiName).SetActive(true);
     }
 
     public void HideUi(String uiName)
     {
-        UiManager.UiDic[uiName].SetActive(false);
+        UiManager.GetUi(uiName).SetActive(false);
     }
 
     public GameObject SpawnPrefab(String path, GameObject parent = null)
