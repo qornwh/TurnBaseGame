@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerState : StateBase
 {
@@ -8,8 +9,7 @@ public class PlayerState : StateBase
     public int PlayerID { get; set; }
     public int MaxHp { get; set; }
     public int MaxMp { get; set; }
-    public int PosX { get; set; }
-    public int PosY { get; set; }
+    public Vector2Int Position { get; set; }
     public int Team { get; set; }
     public bool IsAi { get; set; }
     public override int Move
@@ -27,12 +27,13 @@ public class PlayerState : StateBase
     public LinkedList<int> AttackCodes { get; set; }
     public CharacterData CharacterData { get; set; }
     public List<PlayerBuffState> PlayerBuffStates { get; set; }
-    public event Action<int, int> OnMoveAction;
+    public event Action<Vector2Int> OnMoveAction;
+    public event Action OnAutoMoveAction;
     public event Action<int> OnSkillAction;
     public event Action OnAddSkillAction;
     public event Action OnRemoveSkillAction;
 
-    public PlayerState(int playerId, int posX, int posY, int team, bool isAi, CharacterData characterData)
+    public PlayerState(int playerId, Vector2Int position, int team, bool isAi, CharacterData characterData)
     {
         PlayerID = playerId;
         CharacterData = characterData;
@@ -46,8 +47,7 @@ public class PlayerState : StateBase
         Sh = characterData.sh;
         Move = characterData.move;
         SkillLevel = 1;
-        PosX = posX;
-        PosY = posY;
+        Position = position;
         Team = team;
         IsAi = isAi;
     }
@@ -80,9 +80,14 @@ public class PlayerState : StateBase
         return Hp <= 0;
     }
 
-    public void OnMove(int arg1, int arg2)
+    public void OnMove(Vector2Int pos)
     {
-        OnMoveAction?.Invoke(arg1, arg2);
+        OnMoveAction?.Invoke(pos);
+    }
+
+    public void OnAutoMove()
+    {
+        OnAutoMoveAction?.Invoke();
     }
 
     public void OnSkill(int skillCode)

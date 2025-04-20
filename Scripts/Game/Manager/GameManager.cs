@@ -21,13 +21,11 @@ public class GameManager : MonoBehaviour
     public TurnSystem TurnSystem { get; set; }
     public GameDataManager GameDataManager { get; set; }
     public Camera GameCamera { get; set; }
-    
-    public AiController AiController { get; set; }
 
     [FormerlySerializedAs("BlockBase")][SerializeField] private BlockBase blockBase;
     [FormerlySerializedAs("MouseHover")][SerializeField] private MouseHover mouseHover;
     [FormerlySerializedAs("MouseHover")][SerializeField] private PlayerUi playerUi;
-    private BlockState<BlockBase> _selectedBlock; // 이동할 블록
+    private BlockState<BlockBase> _selectedBlock; // 이동할 위치
     private Dictionary<string, Sprite> SpriteMap { get; set; }
 
     private void TestInit()
@@ -36,8 +34,8 @@ public class GameManager : MonoBehaviour
         PlayerId = 1;
         PlayerList = new List<PlayerState>();
         TeamDic = new Dictionary<int, List<PlayerState>>();
-        PlayerList.Add(new PlayerState(1, 0,0,1, false, GameDataManager.GetCharacter(100)));
-        PlayerList.Add(new PlayerState(2, 7, 5, 2, true, GameDataManager.GetCharacter(200)));
+        PlayerList.Add(new PlayerState(1, new Vector2Int(0,0),1, false, GameDataManager.GetCharacter(100)));
+        PlayerList.Add(new PlayerState(2, new Vector2Int(7, 5), 2, true, GameDataManager.GetCharacter(200)));
         TeamDic.Add(1, PlayerList.Where(p => p.Team == 1).ToList());
         TeamDic.Add(2, PlayerList.Where(p => p.Team == 2).ToList());
 
@@ -47,10 +45,8 @@ public class GameManager : MonoBehaviour
             var playerState = PlayerList.Find(p => p.PlayerID == 1);
             if (playerState != null)
             {
-                playerState.PosX = 0;
-                playerState.PosY = 0;
-                var tilePosition = TileManager.GetTilePosition(playerState.PosX, playerState.PosY);
-                TileManager.RootBlockStates[playerState.PosY][playerState.PosX].Type = BlockType.Player;
+                var tilePosition = TileManager.GetTilePosition(playerState.Position);
+                TileManager.RootBlockStates[playerState.Position.y][playerState.Position.x].Type = BlockType.Player;
                 player.Init(playerState, tilePosition);
 
                 playerUi.Init(playerState);
@@ -63,10 +59,8 @@ public class GameManager : MonoBehaviour
             var playerState = PlayerList.Find(p => p.PlayerID == 2);
             if (playerState != null)
             {
-                playerState.PosX = 7;
-                playerState.PosY = 5;
-                var tilePosition = TileManager.GetTilePosition(playerState.PosX, playerState.PosY);
-                TileManager.RootBlockStates[playerState.PosY][playerState.PosX].Type = BlockType.Player;
+                var tilePosition = TileManager.GetTilePosition(playerState.Position);
+                TileManager.RootBlockStates[playerState.Position.y][playerState.Position.x].Type = BlockType.Player;
                 player2.Init(playerState, tilePosition);
             }
         }
@@ -81,7 +75,6 @@ public class GameManager : MonoBehaviour
         TileManager = new TileManager();
         TurnSystem = new TurnSystem();
         SpriteMap = new Dictionary<string, Sprite>();
-        AiController = new AiController();
         PrefabDict = new Dictionary<string, GameObject>();
     }
 
@@ -93,7 +86,6 @@ public class GameManager : MonoBehaviour
         TileManager.CreateBlock += CreateTile;
         TileManager.Init();
         UiManager.Init();
-        AiController.Init();
 
         TestInit();
         TurnSystem.Init(PlayerList.Select(p => p.PlayerID).ToList());
@@ -161,7 +153,6 @@ public class GameManager : MonoBehaviour
             {
                 // ai 플레이어인 경우
                 // astar 알고리즘으로 최단 경로 찾기
-                _selectedBlock = AiController.AutoMove(playerState, 4);
                 TrunDone();
             }
         };
@@ -178,7 +169,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 // ai 플레이어인 경우
-                AiController.AutoSkill(playerState);
+                // PlayerController.AutoSkill(playerState);
                 // 가장 강한 스킬부터 때려 붙는다.
             }
         };
@@ -194,17 +185,16 @@ public class GameManager : MonoBehaviour
             var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
             if (playerState != null)
             {
-                TileManager.RootBlockStates[playerState.PosY][playerState.PosX].Type = BlockType.Empty;
-                TileManager.RootBlockStates[_selectedBlock.Row][_selectedBlock.Col].Type = BlockType.Player;
-                playerState.PosX = _selectedBlock.Col;
-                playerState.PosY = _selectedBlock.Row;
+                if (_selectedBlock != null)
+                    playerState.OnMove(_selectedBlock.Position);
+                else
+                    playerState.OnAutoMove();
                 
-                playerState.OnMove(_selectedBlock.Col, _selectedBlock.Row);
                 if (playerState.PlayerID == PlayerId)
                 {
                     TileManager.HideMovePinter();
-                    MoveTurnEnd();
                 }
+                _selectedBlock = null;
             }
         }
         else if (TurnSystem.GetCurrentPhase() == TurnPhase.Skill)
@@ -215,6 +205,10 @@ public class GameManager : MonoBehaviour
                 AttackTurnEnd();
             }
         }
+    }
+
+    public void EndTurn()
+    {
         TurnSystem.EndTurn();
     }
 

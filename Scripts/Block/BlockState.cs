@@ -19,17 +19,15 @@ public enum BlockType
 
 public class BlockState<T>
 {
-    public int Col { get; set; }
-    public int Row { get; set; }
+    public Vector2Int Position { get; set; }
 
     private BlockType _type;
     private IBlock _object;
     private T _gameObject;
     
-    public BlockState(int col, int row)
+    public BlockState(Vector2Int position)
     {
-        Col = col;
-        Row = row;
+        Position = position;
         Type = BlockType.Empty;
     }
     

@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class AiController
+public class PlayerController : MonoBehaviour
 {
     class PathNode
     {
@@ -26,16 +27,23 @@ public class AiController
         }
     }
 
-    private TileManager _tileManagerRef;
+    private TileManager _tileManager;
+    private MovePath _movePath;
 
-    public void Init()
+    void Awake()
+    {
+        _movePath = GetComponent<MovePath>();
+    }
+    
+    void Start()
     {
         var gm = GameInstance.GetInstance().GameManager;
         var tileManager = gm.TileManager;
-        _tileManagerRef = tileManager;
+        _tileManager = tileManager;
+        _movePath.OnPathComplatedAction += gm.EndTurn;
     }
 
-    private void GetEnemyPos(PlayerState playerState, out int posX, out int posY)
+    private void GetEnemyPos(PlayerState playerState, ref Vector2Int target)
     {
         var gm = GameInstance.GetInstance().GameManager;
 
@@ -51,43 +59,47 @@ public class AiController
             }
         }
         
-        posX = enemy.PosX;
-        posY = enemy.PosY;
+        target = enemy.Position;
     }
 
-    private void Neighbor(int x, int y, int enemyPosX, int enemyPosY, PathNode node, int[,] dist,
+    private void Neighbor(int x, int y, Vector2Int target, PathNode node, int[,] dist,
         PriorityQueue<PathNode> pq)
     {
         // 범위 내에 들어가 있어야 한다.
-        if (0 <= x && x < _tileManagerRef.GetWidth() && 0 <= y && y < _tileManagerRef.GetHeight())
+        if (0 <= x && x < _tileManager.GetWidth() && 0 <= y && y < _tileManager.GetHeight())
         {
-            var blockArray2D = _tileManagerRef.RootBlockStates;
+            var blockArray2D = _tileManager.RootBlockStates;
             if (dist[y, x] == 0 && blockArray2D[y][x].Type == BlockType.Empty)
             {
                 int nextG = node.G + 1;
-                int nextH = Mathf.Abs(x - enemyPosX) + Mathf.Abs(y - enemyPosY);
+                int nextH = Mathf.Abs(x - target.x) + Mathf.Abs(y - target.y);
                 dist[y, x] = nextH;
                 pq.Enqueue(new PathNode(nextG, nextH, x, y, node));
             }
         }
     }
 
-    public BlockState<BlockBase> AutoMove(PlayerState playerState, int distance)
+    public void AutoMoveTo(PlayerState playerState)
+    {
+        Vector2Int target = new Vector2Int(0, 0);
+        GetEnemyPos(playerState, ref target);
+        
+        MoveTo(playerState, target, true);
+    }
+
+    public void MoveTo(PlayerState playerState, Vector2Int target, bool auto = false)
     {
         // 맵 들고오기
-        var blockArray2D = _tileManagerRef.RootBlockStates;
-        int posX = playerState.PosX;
-        int posY = playerState.PosY;
+        int posX = playerState.Position.x;
+        int posY = playerState.Position.y;
+        int distance = playerState.Move;
         {
-            // 적위치
-            GetEnemyPos(playerState, out int enemyPosX, out int enemyPosY);
-
             // 캐릭터 이동, astar 알고리즘으로 최단 경로 찾기
-            int[,] dist = new int[_tileManagerRef.GetHeight(), _tileManagerRef.GetWidth()];
+            int[,] dist = new int[_tileManager.GetHeight(), _tileManager.GetWidth()];
             PriorityQueue<PathNode> pq = new PriorityQueue<PathNode>(100, (a, b) => a.Cost() < b.Cost());
-            pq.Enqueue(new PathNode(0, Mathf.Abs(posX - enemyPosX) + Mathf.Abs(posY - enemyPosY), posX, posY, null));
+            pq.Enqueue(new PathNode(0, Mathf.Abs(posX - target.x) + Mathf.Abs(posY - target.y), posX, posY, null));
 
-            List<Tuple<int, int>> paths = new List<Tuple<int, int>>();
+            List<Vector2Int> paths = new List<Vector2Int>();
             List<PathNode> nodes = new List<PathNode>();
             while (pq.Count > 0)
             {
@@ -99,26 +111,34 @@ public class AiController
                 int h = node.H;
 
                 // 도착
-                if (h == 1)
+                if ((auto && h == 1) || (!auto && h == 0))
                 {
                     while (node != null)
                     {
-                        paths.Add(new Tuple<int, int>(node.X, node.Y));
+                        paths.Add(new Vector2Int(node.X, node.Y));
                         node = node.Parent;
                     }
+                    if (paths.Count > 0 && paths[^1].x == posX && paths[^1].y == posY)
+                        paths.RemoveAt(paths.Count - 1);
                     break;
                 }
                 // 상하좌우만 체크
-                Neighbor(x - 1, y, enemyPosX, enemyPosY, node, dist, pq);
-                Neighbor(x + 1, y, enemyPosX, enemyPosY, node, dist, pq);
-                Neighbor(x, y - 1, enemyPosX, enemyPosY, node, dist, pq);
-                Neighbor(x, y + 1, enemyPosX, enemyPosY, node, dist, pq);
+                Neighbor(x - 1, y, target, node, dist, pq);
+                Neighbor(x + 1, y, target, node, dist, pq);
+                Neighbor(x, y - 1, target, node, dist, pq);
+                Neighbor(x, y + 1, target, node, dist, pq);
             }
-
+            
             paths.Reverse();
-            if (paths.Count <= distance)
-                return blockArray2D[paths.Last().Item2][paths.Last().Item1];
-            return blockArray2D[paths[distance].Item2][paths[distance].Item1];
+            if (paths.Count> distance)
+                paths.RemoveRange(distance, paths.Count - distance);
+
+            if (paths.Count > 0)
+            {
+                _movePath.StartMove(paths);
+                _tileManager.RootBlockStates[posY][posX].Type = BlockType.Empty;
+                _tileManager.RootBlockStates[paths[paths.Count - 1].y][paths[paths.Count - 1].x].Type = BlockType.Player;
+            }
         }
     }
 

@@ -5,26 +5,33 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private PlayerController _playerController;
     public PlayerState PlayerState { get; set; }
     public int PlayerId { get; set; }
     public int Type { get; set; }
 
+    void Awake()
+    {
+        _playerController = GetComponent<PlayerController>();
+    }
+
     public void Init(PlayerState state, Vector3 position)
     {
         PlayerState = state;
-        PlayerState.OnMoveAction += PlayMoveAction;
+        PlayerState.OnMoveAction += PlayMove;
+        PlayerState.OnAutoMoveAction += AutoMove;
         PlayerState.OnSkillAction += PlaySkillAction;
         gameObject.transform.position = position;
     }
 
-    void PlayMoveAction(int col, int row)
+    void PlayMove(Vector2Int pos)
     {
-        var gm = GameInstance.GetInstance().GameManager;
-        var tileManager = gm.TileManager;
-        var newPosition = tileManager.GetTilePosition(col, row);
-        gameObject.transform.position = newPosition;
+        _playerController.MoveTo(PlayerState, pos);
+    }
 
-        PlayerState.Move = 4;
+    void AutoMove()
+    {
+        _playerController.AutoMoveTo(PlayerState);
     }
 
     void PlaySkillAction(int skillCode)

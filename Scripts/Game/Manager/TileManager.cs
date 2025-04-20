@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,11 +40,17 @@ public class TileManager
             ViewBlockStates.Add(new List<BlockState<BlockBase>>());
             for (int x = 0; x < colSize; x++)
             {
-                FloorBlockStates[y].Add(new BlockState<BlockBase>(x, y));
-                RootBlockStates[y].Add(new BlockState<BlockBase>(x, y));
-                ViewBlockStates[y].Add(new BlockState<BlockBase>(x, y));
+                FloorBlockStates[y].Add(new BlockState<BlockBase>(new Vector2Int(x, y)));
+                RootBlockStates[y].Add(new BlockState<BlockBase>(new Vector2Int(x, y)));
+                ViewBlockStates[y].Add(new BlockState<BlockBase>(new Vector2Int(x, y)));
             }
         }
+        
+        // 초기 포지션 계산 <= 여기서만 사용
+        var accPosition = new Func<Vector2Int, Vector3>((Vector2Int position) =>
+        {
+            return new Vector3((float) position.x - colSize / 2, 0, (float) position.y - rowSize / 2);
+        });
 
         // 바닥 루트 생성
         GameObject rootFloorObject = OnCreateGameObject(new Vector3(0, -0.5f, 0), Quaternion.identity);
@@ -51,7 +58,7 @@ public class TileManager
         {
             foreach (var state in cols)
             {
-                var child = OnCreateBlock(rootFloorObject, new Vector3(state.Col - colSize / 2 , 0, state.Row - rowSize / 2 ), Quaternion.identity).GetComponent<BlockBase>();
+                var child = OnCreateBlock(rootFloorObject, accPosition(state.Position), Quaternion.identity).GetComponent<BlockBase>();
                 child.Initialize(state);
                 state.Object = child;
                 state.GameObject = child;
@@ -66,7 +73,7 @@ public class TileManager
             for (int j = 0; j < colSize; j++)
             {
                 var state = RootBlockStates[i][j];
-                var child = OnCreateBlock(rootFiledObject, new Vector3(state.Col - colSize / 2 , 0, state.Row - rowSize / 2 ), Quaternion.identity).GetComponent<BlockBase>();
+                var child = OnCreateBlock(rootFiledObject, accPosition(state.Position), Quaternion.identity).GetComponent<BlockBase>();
                 child.Initialize(state);
                 state.Object = child;
                 state.GameObject = child;
@@ -80,7 +87,7 @@ public class TileManager
         {
             foreach (var state in cols)
             {
-                var child = OnCreateBlock(rootShadowFiledObject, new Vector3(state.Col - colSize / 2, 0, state.Row - rowSize / 2), Quaternion.identity).GetComponent<BlockBase>();
+                var child = OnCreateBlock(rootShadowFiledObject, accPosition(state.Position), Quaternion.identity).GetComponent<BlockBase>();
                 child.Initialize(state);
                 state.Object = child;
                 state.GameObject = child;
@@ -132,9 +139,14 @@ public class TileManager
         return CreateBlock?.Invoke(parent, position, rotation);
     }
 
-    public Vector3 GetTilePosition(int col, int row)
+    public Vector3 GetTilePosition(Vector2Int pos)
     {
-        return FloorBlockStates[row][col].GameObject.transform.position;
+        return FloorBlockStates[pos.y][pos.x].GameObject.transform.position;
+    }
+
+    public Vector3 GetTileWordPosition(Vector2Int pos)
+    {
+        return FloorBlockStates[pos.y][pos.x].GameObject.transform.localPosition;
     }
     
     public int GetWidth()
