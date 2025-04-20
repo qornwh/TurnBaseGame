@@ -75,6 +75,56 @@ public class PlayerState : StateBase
         OnUpdateStatusAction(); // 턴 종료시 한번 호출해 준다.
     }
 
+    public Tuple<int, int> GetSh()
+    {
+        int buf = 0;
+        foreach (var buffState in PlayerBuffStates)
+        {
+            buf += buffState.Sh;
+        }
+        return new Tuple<int, int>(Sh, buf);
+    }
+
+    public Tuple<int, int> GetMaxHp()
+    {
+        int buf = 0;
+        foreach (var buffState in PlayerBuffStates)
+        {
+            buf += buffState.Hp;
+        }
+        return new Tuple<int, int>(MaxHp, buf);
+    }
+
+    public Tuple<int, int> GetMaxMp()
+    {
+        int buf = 0;
+        foreach (var buffState in PlayerBuffStates)
+        {
+            buf += buffState.Mp;
+        }
+        return new Tuple<int, int>(MaxMp, buf);
+    }
+
+    public Tuple<int, int> GetMove()
+    {
+        int buf = 0;
+        foreach (var buffState in PlayerBuffStates)
+        {
+            buf += buffState.Move;
+        }
+        return new Tuple<int, int>(Move, buf);
+    }
+
+    public Tuple<int, int> GetSkillLevel()
+    {
+        int buf = 0;
+        foreach (var buffState in PlayerBuffStates)
+        {
+            buf += buffState.SkillLevel;
+        }
+        return new Tuple<int, int>(SkillLevel, buf);
+    }
+
     public bool IsDead()
     {
         return Hp <= 0;
@@ -95,17 +145,42 @@ public class PlayerState : StateBase
         OnSkillAction?.Invoke(skillCode);
     }
 
+    public int GetUseMp()
+    {
+        int mp = Mp;
+        foreach (var attack in AttackCodes)
+        {
+            var skillData = CharacterData.Skills.Find(data => attack == data.code);
+            
+            if (skillData != null)
+            {
+                mp -= skillData.manaCost;
+            }
+        }
+        return mp;
+    }
+
     public void OnAddSkill(int skillCode)
     {
+        // 여기서 마나 체크
+        int mana = GetUseMp();
         if (AttackCodes.Count < AttackCount)
         {
-            AttackCodes.AddLast(skillCode);
-            OnAddSkillAction?.Invoke();
+            var skillData = CharacterData.Skills.Find(data => skillCode == data.code);
+            if (skillData != null)
+            {
+                if (skillData.manaCost <= mana)
+                {
+                    AttackCodes.AddLast(skillCode);
+                    OnAddSkillAction?.Invoke();
+                }
+            }
         }
     }
 
     public void OnRemoveSkill(int index)
     {
+        // 여기서 마나 체크
         int idx = 0;
         foreach (var skill in AttackCodes)
         {

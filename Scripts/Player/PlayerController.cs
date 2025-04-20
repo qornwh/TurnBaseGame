@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -89,7 +86,6 @@ public class PlayerController : MonoBehaviour
 
     public void MoveTo(PlayerState playerState, Vector2Int target, bool auto = false)
     {
-        // 맵 들고오기
         int posX = playerState.Position.x;
         int posY = playerState.Position.y;
         int distance = playerState.Move;
@@ -118,8 +114,6 @@ public class PlayerController : MonoBehaviour
                         paths.Add(new Vector2Int(node.X, node.Y));
                         node = node.Parent;
                     }
-                    if (paths.Count > 0 && paths[^1].x == posX && paths[^1].y == posY)
-                        paths.RemoveAt(paths.Count - 1);
                     break;
                 }
                 // 상하좌우만 체크
@@ -130,8 +124,8 @@ public class PlayerController : MonoBehaviour
             }
             
             paths.Reverse();
-            if (paths.Count> distance)
-                paths.RemoveRange(distance, paths.Count - distance);
+            if (paths.Count >= distance)
+                paths.RemoveRange(distance + 1, paths.Count - distance - 1);
 
             if (paths.Count > 0)
             {
@@ -144,5 +138,10 @@ public class PlayerController : MonoBehaviour
 
     public void AutoSkill(PlayerState playerState)
     {
+    }
+
+    public void Skill(PlayerState playerState)
+    {
+        
     }
 }
