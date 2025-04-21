@@ -1133,7 +1133,7 @@ GameObject:
   - component: {fileID: 1759944057804487544}
   - component: {fileID: 1661133229052491503}
   m_Layer: 5
-  m_Name: Main
+  m_Name: VerticalLayout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1806,18 +1806,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4181960292875338039}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6305848654922041065 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7893562525984180190, guid: 2bf12209e73bcce46b083e013f9c078b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4181960292875338039}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45f09c09f9262904cb8f8ef0decad60d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7537433254367116690 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5950127186460228773, guid: 2bf12209e73bcce46b083e013f9c078b,
@@ -2317,7 +2305,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillScrollViewContentPrefab: {fileID: 8190110206236870863, guid: 72259daea1136d0458e080b7fe9daa6d,
     type: 3}
-  ManaProgressBar: {fileID: 6305848654922041065}
 --- !u!224 &8662203861514662803 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1737922466856732348, guid: f91b6cdcedba2ff41bc25ba83e949bca,

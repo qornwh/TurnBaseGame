@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class MovePath : MonoBehaviour
 {
-    private readonly float _moveSpeed = 2f; // 고정
-    private List<Vector2Int> _pathPoints;
-    private int _currentIndex;
+    private readonly float moveSpeed = 2f; // 고정
+    private List<Vector2Int> pathPoints;
+    private int currentIndex = 0;
     
     private TileManager _tileManager;
 
@@ -23,8 +23,8 @@ public class MovePath : MonoBehaviour
 
     public void StartMove(List<Vector2Int> path)
     {
-        _pathPoints = path;
-        _currentIndex = 0;
+        pathPoints = path;
+        currentIndex = 0;
         StopAllCoroutines();
         StartCoroutine(MovePathUpdate());
     }
@@ -32,18 +32,18 @@ public class MovePath : MonoBehaviour
     // Update is called once per frame
     private IEnumerator MovePathUpdate()
     {
-        while (_currentIndex < _pathPoints.Count)
+        while (currentIndex < pathPoints.Count)
         {
-            Vector3 target = _tileManager.GetTileWordPosition(_pathPoints[_currentIndex]);
+            Vector3 target = _tileManager.GetTileWordPosition(pathPoints[currentIndex]);
             
             while (Vector3.Distance(transform.position, target) > 0.01f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
                 yield return null;
             }
 
             transform.position = target;
-            _currentIndex++;
+            currentIndex++;
         }
         OnPathComplete();
     }

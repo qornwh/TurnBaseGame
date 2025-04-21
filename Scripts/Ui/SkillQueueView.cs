@@ -9,9 +9,6 @@ public class SkillQueueView : MonoBehaviour
     // 스킬 스크롤 뷰
     [SerializeField] private SkillIcon skillScrollViewContentPrefab;
     
-    // 마나
-    [SerializeField] private SlideBarUi ManaProgressBar;
-    
     void Start()
     {
         var gm = GameInstance.GetInstance().GameManager;
@@ -19,7 +16,6 @@ public class SkillQueueView : MonoBehaviour
         playerState.OnAddSkillAction += UpdateView;
         playerState.OnRemoveSkillAction += UpdateView;
         UpdateView();
-        ManaProgressBar.Init(playerState.GetUseMp());
     }
 
     void UpdateView()
@@ -45,7 +41,5 @@ public class SkillQueueView : MonoBehaviour
             };
             skillObj.SetEnableMinus();
         }
-        
-        ManaProgressBar.UpdatePersent(playerState.GetUseMp());
     }
 }
