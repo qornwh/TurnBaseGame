@@ -1,0 +1,314 @@
+﻿{
+  "characterTypes": ["수호", "캐리", "누커"],
+  "skillTypes": ["공격", "쉴드", "디버프"],
+  "characterInfo": [
+    {
+      "name": "knight002",
+      "code": 100,
+      "type": 0,
+      "hp": 100,
+      "mp": 100,
+      "sh": 0,
+      "move": 2,
+      "mpRegen": 100,
+      "skillIds": [101, 102],
+      "description": "",
+      "iconPath": "Images/Profile/100",
+      "Path": "GameResources/00_Prefab/01_Character/knight002"
+    },
+    {
+      "name": "knight003",
+      "code": 200,
+      "type": 1,
+      "hp": 150,
+      "mp": 50,
+      "sh": 0,
+      "move": 2,
+      "mpRegen": 20,
+      "skillIds": [101, 202],
+      "description": "",
+      "iconPath": "Images/Profile/200",
+      "path" : "GameResources/00_Prefab/01_Character/knight003"
+    },
+    {
+      "name": "knight004",
+      "code": 300,
+      "type": 2,
+      "hp": 80,
+      "mp": 50,
+      "sh": 0,
+      "move": 3,
+      "mpRegen": 20,
+      "skillIds": [101, 302],
+      "description": "",
+      "iconPath": "Images/Profile/300",
+      "Path": "GameResources/00_Prefab/01_Character/knight004"
+    }
+  ],
+  "skills": [
+    {
+      "code": 101,
+      "name": "폭발의 일격",
+      "type": "attack",
+      "subtype": "selfArea",
+      "damage": 100,
+      "manaCost": 30,
+      "description": "자신을 중심으로 범위 내 적들에게 100의 피해를 준다.",
+      "iconPath": "Images/Skills/101",
+      "levels": [
+        {
+          "level" : 1,
+          "center" : [0,0],
+          "range" : [
+            [100,100]
+          ]
+        },
+        {
+          "level" : 2,
+          "center" : [0,0],
+          "range" : [
+            [120,120],
+            [120,120]
+          ]
+        },
+        {
+          "level" : 3,
+          "center" : [1,1],
+          "range" : [
+            [130, 130, 130],
+            [130, 130, 130],
+            [130, 130, 130]
+          ]
+        }
+      ]
+    },
+    {
+      "code": 102,
+      "name": "불꽃 폭풍",
+      "type": "attack",
+      "subtype": "targetArea",
+      "areaSize": 2,
+      "damage": 80,
+      "manaCost": 25,
+      "description": "선택한 위치를 중심으로 범위 내 적들에게 80의 피해를 준다.",
+      "iconPath": "Images/Skills/102",
+      "levels": [
+        {
+          "level" : 1,
+          "center" : [0,1],
+          "range" : [
+            [100,100,100],
+            [100,100,100],
+            [100,100,100]
+          ]
+        },
+        {
+          "level" : 2,
+          "center" : [1,1],
+          "range" : [
+            [120,120,120],
+            [120,120,120],
+            [120,120,120]
+          ]
+        },
+        {
+          "level" : 3,
+          "center" : [1,2],
+          "range" : [
+            [130, 130, 130, 130, 130],
+            [130, 130, 130, 130, 130],
+            [130, 130, 130, 130, 130]
+          ]
+        }
+      ]
+    },
+    {
+      "code": 201,
+      "name": "회복의 빛",
+      "type": "buff",
+      "subtype": "healHp",
+      "healAmount": 150,
+      "manaCost": 20,
+      "description": "체력을 150 회복한다.",
+      "iconPath": "Images/Skills/201"
+    },
+    {
+      "code": 202,
+      "name": "마력 충전",
+      "type": "buff",
+      "subtype": "healMp",
+      "healAmount": 50,
+      "manaCost": 10,
+      "description": "아군 한 명의 마나를 50 회복한다.",
+      "iconPath": "Images/Skills/202"
+    },
+    {
+      "code": 301,
+      "name": "전투의 함성",
+      "type": "buff",
+      "subtype": "increaseAttack",
+      "increasePercent": 20,
+      "durationTurn": 3,
+      "manaCost": 15,
+      "description": "3턴 동안 공격력을 20% 증가시킨다.",
+      "iconPath": "Images/Skills/301",
+      "levels": [
+        {
+          "level" : 1,
+          "center" : [0,0],
+          "range" : [
+            [100]
+          ]
+        },
+        {
+          "level" : 2,
+          "center" : [0,0],
+          "range" : [
+            [120]
+          ]
+        },
+        {
+          "level" : 3,
+          "center" : [0,0],
+          "range" : [
+            [140]
+          ]
+        }
+      ]
+    },
+    {
+      "code": 302,
+      "name": "강철 방패",
+      "type": "attack",
+      "subtype": "selfArea",
+      "damage": 50,
+      "manaCost": 20,
+      "description": "자신을 중심으로 범위 내 적들에게 50의 피해를 준다.",
+      "iconPath": "Images/Skills/302",
+      "levels": [
+        {
+          "level" : 1,
+          "center" : [1,1],
+          "range" : [
+            [0,100,0],
+            [100,100,100],
+            [0,100,0]
+          ]
+        },
+        {
+          "level" : 2,
+          "center" : [2,2],
+          "range" : [
+            [80,80,80],
+            [80,80,80],
+            [80,80,80]
+          ]
+        },
+        {
+          "level" : 3,
+          "center" : [2,2],
+          "range" : [
+            [120,120,120,120,120],
+            [120,120,120,120,120],
+            [120,120,120,120,120],
+            [120,120,120,120,120],
+            [120,120,120,120,120]
+          ]
+        }
+      ]
+    }
+  ],
+  "mapTypes": [
+    {
+      "code": 0,
+      "name": "plain",
+      "path": "GameResources/00_Prefab/04_Map/map01_plain 1"
+    },
+    {
+      "code": 1,
+      "name": "desert",
+      "path": "GameResources/00_Prefab/04_Map/map02_desert"
+    },
+    {
+      "code": 2,
+      "name": "cave",
+      "path": "GameResources/00_Prefab/04_Map/map03_cave"
+    }
+  ],
+  "maps": [
+    {
+      "code": 101,
+      "type": 0,
+      "width": 8,
+      "hight": 6,
+      "data": [
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 2, 0, 0 ],
+        [ 0, 0, 2, 0, 0, 2, 4, 0 ],
+        [ 0, 4, 2, 0, 0, 2, 0, 0 ],
+        [ 0, 0, 2, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ]
+    },
+    {
+      "code": 201,
+      "type": 1,
+      "width": 8,
+      "hight": 6,
+      "data": [
+        [ 0, 2, 2, 2, 2, 2, 2, 0 ],
+        [ 0, 2, 2, 2, 2, 2, 2, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 2, 2, 2, 2, 2, 2, 0 ],
+        [ 0, 2, 2, 2, 2, 2, 2, 0 ]
+      ]
+    },
+    {
+      "code": 301,
+      "type": 2,
+      "width": 8,
+      "hight": 6,
+      "data": [
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 4, 0, 0, 0, 0, 4, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 2, 2, 2, 0, 0, 2, 2, 2 ],
+        [ 0, 4, 0, 0, 0, 0, 4, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ]
+    }
+  ],
+  "blockTypes": [
+    {
+      "code": 0,
+      "name": "Empty",
+      "path": "Prefabs/Empty"
+    },
+    {
+      "code": 1,
+      "name": "Floor",
+      "path": "Prefabs/Floor"
+    },
+    {
+      "code": 2,
+      "name": "Wall",
+      "path": "Prefabs/Wall"
+    },
+    {
+      "code": 4,
+      "name": "Speed",
+      "path": "Prefabs/Speed"
+    },
+    {
+      "code": 10,
+      "name": "Move",
+      "path": "Prefabs/Move"
+    },
+    {
+      "code": 12,
+      "name": "Next",
+      "path": "Prefabs/Next"
+    }
+  ]
+}
