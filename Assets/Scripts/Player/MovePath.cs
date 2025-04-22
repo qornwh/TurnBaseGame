@@ -9,10 +9,9 @@ public class MovePath : MonoBehaviour
     private readonly float _moveSpeed = 2f; // 고정
     private List<Vector2Int> _pathPoints;
     private int _currentIndex;
-    
     private TileManager _tileManager;
 
-    public event Action OnPathComplatedAction;
+    public event Action PathComplatedAction;
 
     void Start()
     {
@@ -38,7 +37,9 @@ public class MovePath : MonoBehaviour
             
             while (Vector3.Distance(transform.position, target) > 0.01f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime);
+                Vector3 direction = (transform.position - target).normalized;
+                Quaternion rotation = Quaternion.LookRotation(direction);
+                transform.SetPositionAndRotation(Vector3.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime), rotation);
                 yield return null;
             }
 
@@ -50,11 +51,11 @@ public class MovePath : MonoBehaviour
 
     private void OnPathComplete()
     {
-        OnPathComplatedAction?.Invoke();
+        PathComplatedAction?.Invoke();
     }
 
     private void OnDestroy()
     {
-        OnPathComplatedAction = null;
+        PathComplatedAction = null;
     }
 }
