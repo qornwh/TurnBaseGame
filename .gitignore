@@ -76,4 +76,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # 에셋 제외
-D:\tester\Tales_Of_Valor(pt)/Assets/Resources/GameResources
+/[Aa]ssets/Resources/GameResources/
