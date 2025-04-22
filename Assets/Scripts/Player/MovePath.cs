@@ -24,7 +24,7 @@ public class MovePath : MonoBehaviour
     public void StartMove(List<Vector2Int> path)
     {
         _pathPoints = path;
-        _currentIndex = 0;
+        _currentIndex = 1;
         StopAllCoroutines();
         StartCoroutine(MovePathUpdate());
     }

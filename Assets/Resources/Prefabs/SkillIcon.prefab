@@ -525,7 +525,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8190110206236870863}
         m_TargetAssemblyTypeName: SkillIcon, Assembly-CSharp
-        m_MethodName: OnMouseDown
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

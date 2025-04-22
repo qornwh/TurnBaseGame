@@ -3,15 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class SkillIcon : MonoBehaviour
+public class SkillIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Button buttonSKill;
     [SerializeField] private Button buttonMinus;
 
-    public event Action<int> OnClick;
+    public event Action<int> ClickAction;
+    public event Action<int> MouseEnterAction;
+    public event Action<int> MouseOutAction;
+    
     private SkillData SkillData { get; set; }
     private PlayerState PlayerState { get; set; }
     
@@ -58,8 +62,18 @@ public class SkillIcon : MonoBehaviour
         buttonImage.raycastPadding = new Vector4(3,3,3,3);
     }
 
-    public void OnMouseDown()
+    public void OnClick()
     {
-        OnClick?.Invoke(SkillData.code);
+        ClickAction?.Invoke(SkillData.code);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        MouseEnterAction?.Invoke(SkillData.code);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        MouseOutAction?.Invoke(SkillData.code);
     }
 }

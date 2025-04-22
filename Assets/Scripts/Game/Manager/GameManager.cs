@@ -187,14 +187,14 @@ public class GameManager : MonoBehaviour
             var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
             if (playerState != null)
             {
-                if (_selectedBlock != null)
-                    playerState.OnMove(_selectedBlock.Position);
-                else
-                    playerState.OnAutoMove();
-                
                 if (playerState.PlayerID == PlayerId)
                 {
+                    playerState.OnMove(_selectedBlock.Position);
                     TileManager.HideMovePinter();
+                }
+                else if (playerState.IsAi)
+                {
+                    playerState.OnAutoMove();
                 }
                 _selectedBlock = null;
             }

@@ -32,16 +32,44 @@ public class SkillListView : MonoBehaviour
             {
                 var skillObj = gm.CreateObject(skillScrollViewContentPrefab, content.gameObject);
                 skillObj.Init(skill.code);
-                skillObj.OnClick += AddActionSkill;
+                skillObj.ClickAction += AddActionSkill;
+                skillObj.MouseEnterAction += ViewAttackRange;
+                skillObj.MouseOutAction += DisableAttackRange;
             }
         }
         scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, height);
     }
 
-    void AddActionSkill(int skillId)
+    void AddActionSkill(int skillCode)
     {
         var gm = GameInstance.GetInstance().GameManager;
         var playerState = gm.GetPlayerState(gm.PlayerId);
-        playerState.OnAddSkill(skillId);
+        playerState.OnAddSkill(skillCode);
+    }
+
+    void ViewAttackRange(int skillCode)
+    {
+        var gm = GameInstance.GetInstance().GameManager;
+        var playerState = gm.GetPlayerState(gm.PlayerId);
+        var tm = gm.TileManager;
+        
+        var gdm = gm.GameDataManager;
+        var skillLevel = gdm.GetSkill(skillCode).levelRange[playerState.SkillLevel];
+        int cetnerX = skillLevel.center[0];
+        int centerY = skillLevel.center[1];
+
+        int posX = playerState.Position.x;
+        int posY = playerState.Position.y;
+        
+        // 상대적인 경로를 구한다.
+        tm.ViewSkillPointer(posX - cetnerX, posY - centerY, skillLevel.range);
+    }
+
+    void DisableAttackRange(int skillCode)
+    {
+        var gm = GameInstance.GetInstance().GameManager;
+        var tm = gm.TileManager;
+        
+        tm.HideMovePinter();
     }
 }

@@ -98,23 +98,45 @@ public class TileManager
         gm.SpawnPrefab(gameMapInfo.path);
     }
 
-    public void ViewMovePinter(int col, int row, int distance)
+    public void ViewMovePinter(int curX, int curY, int distance)
     {
+        var gm = GameInstance.GetInstance().GameManager;
+        gm.SelectBlock(ViewBlockStates[curY][curX]);
+
+        curY -= distance;
+        curX -= distance;
         // 가능한 경로 보이기
-        for (int y = row - distance; y <= row + distance; y++)
+        for (int y = 0; y <= distance * 2; y++)
         {
-            if (!(0 <= y && y < rowSize)) continue;
-            for (int x = col - distance; x <= col + distance; x++)
+            int relativeY = curY + y;
+            if (relativeY < 0 || relativeY > rowSize) continue;
+            for (int x = 0; x <= distance * 2; x++)
             {
-                if (!(0 <= x && x < colSize)) continue;
-                if (RootBlockStates[y][x].Type != BlockType.Empty && col != x && row != y) continue;
-                var state = ViewBlockStates[y][x];
+                int relativeX = curX + x;
+                if (relativeX < 0 || relativeX > colSize) continue;
+                if (Mathf.Abs(x - distance) + Mathf.Abs(y - distance) > distance) continue; // 맨해튼 거리
+                if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty && curX != x && curY != y) continue;
+                var state = ViewBlockStates[relativeY][relativeX];
                 state.Type = BlockType.MoveDst;
             }
         }
+    }
 
-        var gm = GameInstance.GetInstance().GameManager;
-        gm.SelectBlock(ViewBlockStates[row][col]);
+    public void ViewSkillPointer(int curX, int curY, in int[,] range)
+    {
+        for (int y = 0; y < range.GetLength(0); y++)
+        {
+            int relativeY = curY + y;
+            if (relativeY < 0 || relativeY > rowSize) continue;
+            for (int x = 0; x < range.GetLength(1); x++)
+            {
+                int relativeX = curX + x;
+                if (relativeX < 0 || relativeX > colSize) continue;
+                if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty) continue;
+                var state = ViewBlockStates[relativeY][relativeX];
+                state.Type = BlockType.MoveDst;
+            }
+        }
     }
 
     public void HideMovePinter()

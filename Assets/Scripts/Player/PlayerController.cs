@@ -124,14 +124,17 @@ public class PlayerController : MonoBehaviour
             }
             
             paths.Reverse();
-            if (paths.Count >= distance)
+            if (paths.Count > distance + 1)
                 paths.RemoveRange(distance + 1, paths.Count - distance - 1);
 
             if (paths.Count > 0)
             {
+                int newPosX = paths[paths.Count - 1].x;
+                int newPosY = paths[paths.Count - 1].y;
                 _movePath.StartMove(paths);
                 _tileManager.RootBlockStates[posY][posX].Type = BlockType.Empty;
-                _tileManager.RootBlockStates[paths[paths.Count - 1].y][paths[paths.Count - 1].x].Type = BlockType.Player;
+                _tileManager.RootBlockStates[newPosY][newPosX].Type = BlockType.Player;
+                playerState.Position = new Vector2Int(newPosX, newPosY);
             }
         }
     }

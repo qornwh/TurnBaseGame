@@ -85,6 +85,14 @@ public class DebuffEffect : ISkillEffect
     }
 }
 
+[System.Serializable]
+public class Level
+{
+    public int level;
+    public int[] center;
+    public int[,] range;
+}
+
 // 스킬 클래스
 [System.Serializable]
 public class SkillData
@@ -96,6 +104,7 @@ public class SkillData
     public int manaCost;
     public string description;
     public string iconPath;
+    public List<Level> levelRange;
 
     // 스킬 효과 컴포넌트
     private ISkillEffect effect;

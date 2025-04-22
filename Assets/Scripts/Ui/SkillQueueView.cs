@@ -39,7 +39,7 @@ public class SkillQueueView : MonoBehaviour
             var skillObj = gm.CreateObject(skillScrollViewContentPrefab, content.gameObject);
             skillObj.Init(skillCode);
             skillObj.Index = idx++;
-            skillObj.OnClick += _skillCode =>
+            skillObj.ClickAction += _skillCode =>
             {
                 playerState.OnRemoveSkill(skillObj.Index);
             };
