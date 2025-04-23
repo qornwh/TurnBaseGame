@@ -62,8 +62,7 @@ public class PlayerController : MonoBehaviour
         target = enemy.Position;
     }
 
-    private void Neighbor(int x, int y, Vector2Int target, PathNode node, int[,] dist,
-        PriorityQueue<PathNode> pq)
+    private void Neighbor(int x, int y, Vector2Int target, PathNode node, int[,] dist, PriorityQueue<PathNode> pq)
     {
         // 범위 내에 들어가 있어야 한다.
         if (0 <= x && x < _tileManager.GetWidth() && 0 <= y && y < _tileManager.GetHeight())
@@ -144,13 +143,40 @@ public class PlayerController : MonoBehaviour
 
     public void AutoSkillTo(PlayerState playerState)
     {
-        Debug.Log("ai 구현 필요!!!!");
+        PriorityQueue<AttackEffect> pq = new PriorityQueue<AttackEffect>(10, (pre, cur) => pre.damage > cur.damage);
+        foreach (var skill in playerState.CharacterData.Skills)
+        {
+            var skillLevel = skill.levelRange[playerState.SkillLevel];
+            if (skill.type == SkillType.Attack)
+            {
+                int relativeX = playerState.Position.x - skillLevel.center[0];
+                int relativeY = playerState.Position.y - skillLevel.center[1];
+                
+                Vector2Int target = new Vector2Int(0, 0);
+                GetEnemyPos(playerState, ref target);
+                if (_tileManager.TriggerPosition(relativeX, relativeY, skill.levelRange[playerState.SkillLevel].range, target))
+                {
+                    pq.Enqueue((AttackEffect)skill);
+                }
+            }
+        }
+
+        while (pq.Count > 0)
+        {
+            var skillData = pq.Dequeue();
+            int useMp = playerState.GetUseMp();
+            int cnt = useMp / skillData.manaCost;
+
+            for (int i = 0; i < cnt; i++)
+            {
+                playerState.SkillCodes.AddLast(skillData.code);
+            }
+        }
     }
 
     public void Skill(PlayerState playerState, int skillCode)
     {
         var gm = GameInstance.GetInstance().GameManager;
-        var tm = gm.TileManager;
         var gdm = gm.GameDataManager;
         
         var skillLevel = gdm.GetSkill(skillCode).levelRange[playerState.SkillLevel];
@@ -158,12 +184,12 @@ public class PlayerController : MonoBehaviour
         int relativeY = playerState.Position.y - skillLevel.center[1];
         
         List<Vector2Int> tilePositions = new List<Vector2Int>();
-        tm.SkillPointerList(relativeX, relativeY, skillLevel.range, tilePositions);
+        _tileManager.SkillPointerList(relativeX, relativeY, skillLevel.range, tilePositions);
         
         List<Vector3> positions = new List<Vector3>();
         foreach (var position in tilePositions) 
         {
-            positions.Add(tm.GetTileWordPosition(position));
+            positions.Add(_tileManager.GetTileWordPosition(position));
         }
         
         _skillExecute.StartSkill(skillCode, positions);

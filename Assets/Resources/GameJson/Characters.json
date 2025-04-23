@@ -25,7 +25,7 @@
       "sh": 0,
       "move": 2,
       "mpRegen": 20,
-      "skillIds": [101, 202],
+      "skillIds": [101, 102],
       "description": "",
       "iconPath": "Images/Profile/200",
       "path" : "GameResources/00_Prefab/01_Character/knight003"
@@ -39,7 +39,7 @@
       "sh": 0,
       "move": 3,
       "mpRegen": 20,
-      "skillIds": [101, 302],
+      "skillIds": [301, 302],
       "description": "",
       "iconPath": "Images/Profile/300",
       "Path": "GameResources/00_Prefab/01_Character/knight004"
@@ -50,7 +50,7 @@
       "code": 101,
       "name": "폭발의 일격",
       "type": "attack",
-      "subtype": "selfArea",
+      "subtype": "areaAttack",
       "damage": 100,
       "manaCost": 30,
       "description": "자신을 중심으로 범위 내 적들에게 100의 피해를 준다.",
@@ -87,7 +87,7 @@
       "code": 102,
       "name": "불꽃 폭풍",
       "type": "attack",
-      "subtype": "targetArea",
+      "subtype": "areaAttack",
       "areaSize": 2,
       "damage": 80,
       "manaCost": 25,
@@ -187,7 +187,7 @@
       "code": 302,
       "name": "강철 방패",
       "type": "attack",
-      "subtype": "selfArea",
+      "subtype": "areaAttack",
       "damage": 50,
       "manaCost": 20,
       "description": "자신을 중심으로 범위 내 적들에게 50의 피해를 준다.",
@@ -205,7 +205,7 @@
         },
         {
           "level" : 2,
-          "center" : [2,2],
+          "center" : [1,1],
           "range" : [
             [80,80,80],
             [80,80,80],

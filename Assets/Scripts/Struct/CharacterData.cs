@@ -35,20 +35,6 @@ public class CharacterData
         Skills.Add(skill);
     }
 
-    // 스킬 사용
-    public void UseSkill(int skillIndex, CharacterData target, Vector2Int position)
-    {
-        if (skillIndex >= 0 && skillIndex < Skills.Count)
-        {
-            SkillData skill = Skills[skillIndex];
-            skill.UseSkill();
-        }
-        else
-        {
-            Debug.LogError($"Skill index {skillIndex} is out of range!");
-        }
-    }
-
     public override string ToString()
     {
         return $"Name: {name}, Code: {code}, Type: {type}, HP: {hp}, MP: {mp}, SH: {sh}, Move: {move}, MPRegen: {mpRegen}, SkillIds: {string.Join(", ", skillIds)}, Description: {description}";

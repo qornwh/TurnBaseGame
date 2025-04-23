@@ -22,9 +22,10 @@ public class SkillQueueView : MonoBehaviour
         playerState.OnRemoveSkillAction += UpdateView;
         ManaProgressBar.Init(playerState.GetUseMp());
         UpdateView();
+        isStart = true;
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         if (isStart)
             UpdateView();

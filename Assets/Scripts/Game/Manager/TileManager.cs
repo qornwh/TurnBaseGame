@@ -109,11 +109,11 @@ public class TileManager
         for (int y = 0; y <= distance * 2; y++)
         {
             int relativeY = curY + y;
-            if (relativeY < 0 || relativeY > rowSize) continue;
+            if (relativeY < 0 || relativeY >= rowSize) continue;
             for (int x = 0; x <= distance * 2; x++)
             {
                 int relativeX = curX + x;
-                if (relativeX < 0 || relativeX > colSize) continue;
+                if (relativeX < 0 || relativeX >= colSize) continue;
                 if (Mathf.Abs(x - distance) + Mathf.Abs(y - distance) > distance) continue; // 맨해튼 거리
                 if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty && curX != x && curY != y) continue;
                 var state = ViewBlockStates[relativeY][relativeX];
@@ -139,21 +139,39 @@ public class TileManager
         for (int y = 0; y < range.GetLength(0); y++)
         {
             int relativeY = curY + y;
-            if (relativeY < 0 || relativeY > rowSize) continue;
+            if (relativeY < 0 || relativeY >= rowSize) continue;
             for (int x = 0; x < range.GetLength(1); x++)
             {
                 int relativeX = curX + x;
-                if (relativeX < 0 || relativeX > colSize) continue;
-                if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty) continue;
+                if (relativeX < 0 || relativeX >= colSize) continue;
+                if (RootBlockStates[relativeY][relativeX].Type == BlockType.Wall) continue;
+                if (range[y,x] == 0) continue;
                 var state = ViewBlockStates[relativeY][relativeX];
-                state.Type = BlockType.MoveDst;
-                
                 list.Add(state.Position);
             }
         }
     }
 
-    public void HideMovePinter()
+    public bool TriggerPosition(int curX, int curY, in int[,] range, Vector2Int targetPosition)
+    {
+        for (int y = 0; y < range.GetLength(0); y++)
+        {
+            int relativeY = curY + y;
+            if (relativeY < 0 || relativeY >= rowSize) continue;
+            for (int x = 0; x < range.GetLength(1); x++)
+            {
+                int relativeX = curX + x;
+                if (relativeX < 0 || relativeX >= colSize) continue;
+                if (RootBlockStates[relativeY][relativeX].Type == BlockType.Wall) continue;
+                if (range[y,x] == 0) continue;
+                
+                if (targetPosition.x == relativeX && targetPosition.y == relativeY) return true;
+            }
+        }
+        return false;
+    }
+
+    public void HideMovePointer()
     {
         // 경로 닫기
         foreach (var cols in ViewBlockStates)

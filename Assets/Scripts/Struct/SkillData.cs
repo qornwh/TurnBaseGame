@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,9 +16,9 @@ public enum SkillType
 public enum SkillSubType
 {
     // 공격 서브타입
-    SelfArea,
-    TargetArea,
-
+    AreaAttack,
+    TargetAttack,
+    
     // 버프 서브타입
     HealHp,
     HealMp,
@@ -29,63 +30,21 @@ public enum SkillSubType
     DecreaseDefense
 }
 
-// 스킬 효과 인터페이스
-public interface ISkillEffect
-{
-    void ApplyEffect();
-}
-
-// 공격 효과 컴포넌트
-[System.Serializable]
-public class AttackEffect : ISkillEffect
+public class AttackEffect : SkillData
 {
     public int damage;
-    public int areaSize;
-
-    public void ApplyEffect()
-    {
-        // 공격 효과 적용 로직
-    }
 }
 
-// 회복 효과 컴포넌트
-[System.Serializable]
-public class HealEffect : ISkillEffect
+public class HealHpEffect : SkillData
 {
     public int healAmount;
-
-    public void ApplyEffect()
-    {
-    }
 }
-
-// 버프 효과 컴포넌트
-[System.Serializable]
-public class BuffEffect : ISkillEffect
+public class BuffEffect : SkillData
 {
     public int increasePercent;
     public int durationTurn;
-
-    public void ApplyEffect()
-    {
-        // 버프 효과 적용 로직
-    }
 }
 
-// 디버프 효과 컴포넌트
-[System.Serializable]
-public class DebuffEffect : ISkillEffect
-{
-    public int decreasePercent;
-    public int durationTurn;
-
-    public void ApplyEffect()
-    {
-        // 디버프 효과 적용 로직
-    }
-}
-
-[System.Serializable]
 public class Level
 {
     public int level;
@@ -94,7 +53,7 @@ public class Level
 }
 
 // 스킬 클래스
-[System.Serializable]
+[JsonConverter(typeof(SkillJsonConverter))]
 public class SkillData
 {
     public int code;
@@ -106,28 +65,6 @@ public class SkillData
     public string iconPath;
     public string path;
     public List<Level> levelRange;
-
-    // 스킬 효과 컴포넌트
-    private ISkillEffect effect;
-
-    // 효과 컴포넌트 설정
-    public void SetEffect(ISkillEffect effectComponent)
-    {
-        effect = effectComponent;
-    }
-
-    // 스킬 사용
-    public void UseSkill()
-    {
-        if (effect != null)
-        {
-            effect.ApplyEffect();
-        }
-        else
-        {
-            Debug.LogError($"Skill {name} has no effect component!");
-        }
-    }
 
     public override string ToString()
     {

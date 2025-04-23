@@ -47,7 +47,7 @@ public class PlayerState : StateBase
         Mp = characterData.mp;
         Sh = characterData.sh;
         Move = characterData.move;
-        SkillLevel = 1;
+        SkillLevel = 0;
         Position = position;
         Team = team;
         IsAi = isAi;

@@ -70,6 +70,6 @@ public class SkillListView : MonoBehaviour
         var gm = GameInstance.GetInstance().GameManager;
         var tm = gm.TileManager;
         
-        tm.HideMovePinter();
+        tm.HideMovePointer();
     }
 }

@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
         PlayerId = 1;
         PlayerList = new List<PlayerState>();
         TeamDic = new Dictionary<int, List<PlayerState>>();
-        PlayerList.Add(new PlayerState(1, new Vector2Int(0,0),1, false, GameDataManager.GetCharacter(100)));
-        PlayerList.Add(new PlayerState(2, new Vector2Int(7, 5), 2, true, GameDataManager.GetCharacter(200)));
+        PlayerList.Add(new PlayerState(1, new Vector2Int(0, 2),1, false, GameDataManager.GetCharacter(100)));
+        PlayerList.Add(new PlayerState(2, new Vector2Int(7, 3), 2, true, GameDataManager.GetCharacter(300)));
         TeamDic.Add(1, PlayerList.Where(p => p.Team == 1).ToList());
         TeamDic.Add(2, PlayerList.Where(p => p.Team == 2).ToList());
 
@@ -219,7 +219,7 @@ public class GameManager : MonoBehaviour
                 if (playerState.PlayerID == PlayerId)
                 {
                     playerState.OnMove(_selectedBlock.Position);
-                    TileManager.HideMovePinter();
+                    TileManager.HideMovePointer();
                 }
                 else if (playerState.IsAi)
                 {
@@ -256,6 +256,7 @@ public class GameManager : MonoBehaviour
                     int attackCode = playerState.SkillCodes.First();
                     playerState.SkillCodes.RemoveFirst();
                     playerState.OnSkill(attackCode);
+                    playerState.Mp -= GameDataManager.GetSkill(attackCode).manaCost;
                 }
                 else
                 {
