@@ -21,10 +21,11 @@ public class GameManager : MonoBehaviour
     public TurnSystem TurnSystem { get; set; }
     public GameDataManager GameDataManager { get; set; }
     public Camera GameCamera { get; set; }
+    public ObjectPoolManager ObjectPoolManager { get; set; }
 
     [FormerlySerializedAs("BlockBase")][SerializeField] private BlockBase blockBase;
     [FormerlySerializedAs("MouseHover")][SerializeField] private MouseHover mouseHover;
-    [FormerlySerializedAs("MouseHover")][SerializeField] private PlayerUi playerUi;
+    [FormerlySerializedAs("PlayerUi")][SerializeField] private PlayerUi playerUi;
     private BlockState<BlockBase> _selectedBlock; // 이동할 위치
     private Dictionary<string, Sprite> SpriteMap { get; set; }
 
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour
         TurnSystem = new TurnSystem();
         SpriteMap = new Dictionary<string, Sprite>();
         PrefabDict = new Dictionary<string, GameObject>();
+        ObjectPoolManager = gameObject.AddComponent<ObjectPoolManager>();
     }
 
     void Start()
@@ -141,6 +143,10 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
+        TurnSystem.OnTurnStart += () =>
+        {
+            playerUi.UpdateTurn();
+        };
         TurnSystem.OnMovePhaseStart += (playerId) =>
         {
             var playerState = PlayerList.Find(p => p.PlayerID == playerId);
@@ -173,8 +179,31 @@ public class GameManager : MonoBehaviour
                 // ai 플레이어인 경우
                 // PlayerController.AutoSkill(playerState);
                 // 가장 강한 스킬부터 때려 붙는다.
+                TrunDone();
             }
         };
+        TurnSystem.OnSkillExecute += (playerId) =>
+        {
+            TrunDone();
+        };
+        TurnSystem.OnTurnEnd += () =>
+        {
+            // 버프 1턴 당기기
+            foreach (var playerState in PlayerList)
+            {
+                playerState.TurnUpdate();
+            }
+        };
+        TurnSystem.IsSkillEnd += () =>
+        {
+            foreach (var playerState in PlayerList)
+            {
+                if (playerState.SkillCodes.Count > 0) 
+                    return false;
+            }
+            return true;
+        };
+        
         TurnSystem.StartTurn();
         CreateObject(mouseHover);
         mouseHover.enabled = false;
@@ -204,7 +233,34 @@ public class GameManager : MonoBehaviour
             var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
             if (playerState != null)
             {
-                AttackTurnEnd();
+                if (playerState.PlayerID == PlayerId)
+                {
+                    AttackTurnEnd();
+                    EndTurn();
+                }
+                else if (playerState.IsAi)
+                {
+                    // ai 스킬 정하기
+                    playerState.OnAutoSkill();
+                    EndTurn();
+                }
+            }
+        }
+        else if (TurnSystem.GetCurrentPhase() == TurnPhase.SkillExecute)
+        {
+            var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
+            if (playerState != null)
+            {
+                if (playerState.SkillCodes.Count > 0)
+                {
+                    int attackCode = playerState.SkillCodes.First();
+                    playerState.SkillCodes.RemoveFirst();
+                    playerState.OnSkill(attackCode);
+                }
+                else
+                {
+                    EndTurn();
+                }
             }
         }
     }
@@ -217,7 +273,8 @@ public class GameManager : MonoBehaviour
     void MoveTurn(int distance)
     {
         // 움직이기 전, 어떤 위치로 갈수 있는지 보여주기 시작
-        TileManager.ViewMovePinter(0, 0, distance);
+        var playerState = PlayerList.Find(p => p.PlayerID == PlayerId);
+        TileManager.ViewMovePinter(playerState.Position.x, playerState.Position.y, distance);
         mouseHover.enabled = true;
     }
     public void MoveTurnEnd()

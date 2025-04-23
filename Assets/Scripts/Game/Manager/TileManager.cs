@@ -124,6 +124,18 @@ public class TileManager
 
     public void ViewSkillPointer(int curX, int curY, in int[,] range)
     {
+        List<Vector2Int> positions = new List<Vector2Int>();
+        SkillPointerList(curX, curY, range, positions);
+
+        foreach (var position in positions)
+        {
+            var state = ViewBlockStates[position.y][position.x];
+            state.Type = BlockType.MoveDst;
+        }
+    }
+
+    public void SkillPointerList(int curX, int curY, in int[,] range, List<Vector2Int> list)
+    {
         for (int y = 0; y < range.GetLength(0); y++)
         {
             int relativeY = curY + y;
@@ -135,6 +147,8 @@ public class TileManager
                 if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty) continue;
                 var state = ViewBlockStates[relativeY][relativeX];
                 state.Type = BlockType.MoveDst;
+                
+                list.Add(state.Position);
             }
         }
     }

@@ -77,3 +77,4 @@ crashlytics-build.properties
 
 # 에셋 제외
 /[Aa]ssets/Resources/GameResources/
+/[Aa]ssets/Resources/GameFxResources/

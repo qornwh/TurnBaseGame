@@ -170,6 +170,11 @@ public class GameDataManager
         }
     }
 
+    public List<SkillData> GetSkills()
+    {
+        return gameData.skills;
+    }
+
     // 캐릭터가 가진 스킬 데이터 가져오기
     public List<SkillData> GetCharacterSkills(int code)
     {

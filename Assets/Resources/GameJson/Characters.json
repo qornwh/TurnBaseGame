@@ -55,6 +55,7 @@
       "manaCost": 30,
       "description": "자신을 중심으로 범위 내 적들에게 100의 피해를 준다.",
       "iconPath": "Images/Skills/101",
+      "path" : "GameFxResources/Prefabs/Interactive/Healing/HealBig",
       "levelRange": [
         {
           "level" : 1,
@@ -92,6 +93,7 @@
       "manaCost": 25,
       "description": "선택한 위치를 중심으로 범위 내 적들에게 80의 피해를 준다.",
       "iconPath": "Images/Skills/102",
+      "path" : "GameFxResources/Prefabs/Interactive/Healing/HealBig",
       "levelRange": [
         {
           "level" : 1,
@@ -131,6 +133,7 @@
       "manaCost": 20,
       "description": "체력을 150 회복한다.",
       "iconPath": "Images/Skills/201",
+      "path" : "GameFxResources/Prefabs/Interactive/Healing/HealBig",
       "levelRange": []
     },
     {
@@ -142,6 +145,7 @@
       "manaCost": 10,
       "description": "아군 한 명의 마나를 50 회복한다.",
       "iconPath": "Images/Skills/202",
+      "path" : "GameFxResources/Prefabs/Interactive/Healing/HealBig",
       "levelRange": []
     },
     {
@@ -154,6 +158,7 @@
       "manaCost": 15,
       "description": "3턴 동안 공격력을 20% 증가시킨다.",
       "iconPath": "Images/Skills/301",
+      "path" : "GameFxResources/Prefabs/Interactive/Healing/HealBig",
       "levelRange": [
         {
           "level" : 1,
@@ -187,6 +192,7 @@
       "manaCost": 20,
       "description": "자신을 중심으로 범위 내 적들에게 50의 피해를 준다.",
       "iconPath": "Images/Skills/302",
+      "path" : "GameFxResources/Prefabs/Interactive/Healing/HealBig",
       "levelRange": [
         {
           "level" : 1,

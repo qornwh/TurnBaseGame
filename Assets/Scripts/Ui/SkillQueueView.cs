@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,9 +9,10 @@ public class SkillQueueView : MonoBehaviour
 {
     // 스킬 스크롤 뷰
     [SerializeField] private SkillIcon skillScrollViewContentPrefab;
-    
     // 마나
     [SerializeField] private SlideBarUi ManaProgressBar;
+    // 초기
+    private bool isStart = false;
     
     void Start()
     {
@@ -18,8 +20,14 @@ public class SkillQueueView : MonoBehaviour
         var playerState = gm.GetPlayerState(gm.PlayerId);
         playerState.OnAddSkillAction += UpdateView;
         playerState.OnRemoveSkillAction += UpdateView;
-        UpdateView();
         ManaProgressBar.Init(playerState.GetUseMp());
+        UpdateView();
+    }
+
+    private void OnEnable()
+    {
+        if (isStart)
+            UpdateView();
     }
 
     void UpdateView()
@@ -34,7 +42,7 @@ public class SkillQueueView : MonoBehaviour
         }
         
         int idx = 0;
-        foreach (var skillCode in playerState.AttackCodes)
+        foreach (var skillCode in playerState.SkillCodes)
         {
             var skillObj = gm.CreateObject(skillScrollViewContentPrefab, content.gameObject);
             skillObj.Init(skillCode);

@@ -104,6 +104,7 @@ public class SkillData
     public int manaCost;
     public string description;
     public string iconPath;
+    public string path;
     public List<Level> levelRange;
 
     // 스킬 효과 컴포넌트

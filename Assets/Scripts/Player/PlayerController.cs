@@ -26,10 +26,12 @@ public class PlayerController : MonoBehaviour
 
     private TileManager _tileManager;
     private MovePath _movePath;
+    private SkillExecute _skillExecute;
 
     void Awake()
     {
         _movePath = GetComponent<MovePath>();
+        _skillExecute = GetComponent<SkillExecute>();
     }
     
     void Start()
@@ -37,7 +39,8 @@ public class PlayerController : MonoBehaviour
         var gm = GameInstance.GetInstance().GameManager;
         var tileManager = gm.TileManager;
         _tileManager = tileManager;
-        _movePath.OnPathComplatedAction += gm.EndTurn;
+        _movePath.PathComplatedAction += gm.EndTurn;
+        _skillExecute.SkillComplatedAction += gm.EndTurn;
     }
 
     private void GetEnemyPos(PlayerState playerState, ref Vector2Int target)
@@ -139,12 +142,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void AutoSkill(PlayerState playerState)
+    public void AutoSkillTo(PlayerState playerState)
     {
+        Debug.Log("ai 구현 필요!!!!");
     }
 
-    public void Skill(PlayerState playerState)
+    public void Skill(PlayerState playerState, int skillCode)
     {
+        var gm = GameInstance.GetInstance().GameManager;
+        var tm = gm.TileManager;
+        var gdm = gm.GameDataManager;
         
+        var skillLevel = gdm.GetSkill(skillCode).levelRange[playerState.SkillLevel];
+        int relativeX = playerState.Position.x - skillLevel.center[0];
+        int relativeY = playerState.Position.y - skillLevel.center[1];
+        
+        List<Vector2Int> tilePositions = new List<Vector2Int>();
+        tm.SkillPointerList(relativeX, relativeY, skillLevel.range, tilePositions);
+        
+        List<Vector3> positions = new List<Vector3>();
+        foreach (var position in tilePositions) 
+        {
+            positions.Add(tm.GetTileWordPosition(position));
+        }
+        
+        _skillExecute.StartSkill(skillCode, positions);
     }
 }

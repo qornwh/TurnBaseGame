@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
         PlayerState = state;
         PlayerState.OnMoveAction += PlayMove;
         PlayerState.OnAutoMoveAction += AutoMove;
+        PlayerState.OnAutoSkillAction += AutoSkill;
         PlayerState.OnSkillAction += PlaySkillAction;
         gameObject.transform.position = position;
         
@@ -49,8 +50,13 @@ public class Player : MonoBehaviour
         _playerController.AutoMoveTo(PlayerState);
     }
 
+    void AutoSkill()
+    {
+        _playerController.AutoSkillTo(PlayerState);
+    }
+
     void PlaySkillAction(int skillCode)
     {
-
+        _playerController.Skill(PlayerState, skillCode);
     }
 }

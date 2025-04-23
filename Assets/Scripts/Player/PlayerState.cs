@@ -24,11 +24,12 @@ public class PlayerState : StateBase
             return move;
         }
     }
-    public LinkedList<int> AttackCodes { get; set; }
+    public LinkedList<int> SkillCodes { get; set; }
     public CharacterData CharacterData { get; set; }
     public List<PlayerBuffState> PlayerBuffStates { get; set; }
     public event Action<Vector2Int> OnMoveAction;
     public event Action OnAutoMoveAction;
+    public event Action OnAutoSkillAction;
     public event Action<int> OnSkillAction;
     public event Action OnAddSkillAction;
     public event Action OnRemoveSkillAction;
@@ -37,7 +38,7 @@ public class PlayerState : StateBase
     {
         PlayerID = playerId;
         CharacterData = characterData;
-        AttackCodes = new LinkedList<int>();
+        SkillCodes = new LinkedList<int>();
         PlayerBuffStates = new List<PlayerBuffState>();
 
         MaxHp = characterData.hp;
@@ -140,6 +141,11 @@ public class PlayerState : StateBase
         OnAutoMoveAction?.Invoke();
     }
 
+    public void OnAutoSkill()
+    {
+        OnAutoSkillAction?.Invoke();
+    }
+
     public void OnSkill(int skillCode)
     {
         OnSkillAction?.Invoke(skillCode);
@@ -148,7 +154,7 @@ public class PlayerState : StateBase
     public int GetUseMp()
     {
         int mp = Mp;
-        foreach (var attack in AttackCodes)
+        foreach (var attack in SkillCodes)
         {
             var skillData = CharacterData.Skills.Find(data => attack == data.code);
             
@@ -164,14 +170,14 @@ public class PlayerState : StateBase
     {
         // 여기서 마나 체크
         int mana = GetUseMp();
-        if (AttackCodes.Count < AttackCount)
+        if (SkillCodes.Count < AttackCount)
         {
             var skillData = CharacterData.Skills.Find(data => skillCode == data.code);
             if (skillData != null)
             {
                 if (skillData.manaCost <= mana)
                 {
-                    AttackCodes.AddLast(skillCode);
+                    SkillCodes.AddLast(skillCode);
                     OnAddSkillAction?.Invoke();
                 }
             }
@@ -182,11 +188,11 @@ public class PlayerState : StateBase
     {
         // 여기서 마나 체크
         int idx = 0;
-        foreach (var skill in AttackCodes)
+        foreach (var skill in SkillCodes)
         {
             if (index == idx)
             {
-                AttackCodes.Remove(skill);
+                SkillCodes.Remove(skill);
                 break;
             }
             idx++;
