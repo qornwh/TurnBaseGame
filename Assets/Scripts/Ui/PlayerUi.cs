@@ -12,7 +12,6 @@ public class PlayerUi : MonoBehaviour
     [SerializeField] private SubStateUi sh;
     [SerializeField] private SubStateUi sl;
     [SerializeField] private SubStateUi mv;
-    [SerializeField] private TurnUi turnUi;
     public PlayerState PlayerState { get; set; }
     
     public void Init(PlayerState playerState)
@@ -47,12 +46,5 @@ public class PlayerUi : MonoBehaviour
         sh.UpdateState(PlayerState.Sh);
         sl.UpdateState(PlayerState.SkillLevel);
         mv.UpdateState(PlayerState.Move);
-    }
-
-    public void UpdateTurn()
-    {
-        var gm = GameInstance.GetInstance().GameManager;
-        int turnCount = gm.TurnSystem.GetCurrentTurnCount();
-        turnUi.OnTurnUpdateAction(turnCount);
     }
 }

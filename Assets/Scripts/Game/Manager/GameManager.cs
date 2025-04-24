@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [FormerlySerializedAs("BlockBase")][SerializeField] private BlockBase blockBase;
     [FormerlySerializedAs("MouseHover")][SerializeField] private MouseHover mouseHover;
     [FormerlySerializedAs("PlayerUi")][SerializeField] private PlayerUi playerUi;
+    [FormerlySerializedAs("TurnUi")][SerializeField] private TurnUi turnUi;
     private BlockState<BlockBase> _selectedBlock; // 이동할 위치
     private Dictionary<string, Sprite> SpriteMap { get; set; }
 
@@ -145,10 +146,12 @@ public class GameManager : MonoBehaviour
     {
         TurnSystem.OnTurnStart += () =>
         {
-            playerUi.UpdateTurn();
+            turnUi.OnTurnUpdate();
+            turnUi.OnSubTurnUpdate();
         };
         TurnSystem.OnMovePhaseStart += (playerId) =>
         {
+            turnUi.OnSubTurnUpdate();
             var playerState = PlayerList.Find(p => p.PlayerID == playerId);
             // 해당 플레이어를 가져온다 (통신은 일단 제외)
             if (TurnSystem.GetCurrentPlayerId() == PlayerId)
@@ -166,6 +169,7 @@ public class GameManager : MonoBehaviour
         };
         TurnSystem.OnSkillPhaseStart += (playerId) =>
         {
+            turnUi.OnSubTurnUpdate();
             if (TurnSystem.GetCurrentPlayerId() == PlayerId)
             {
                 // 내 플레이어인 경우
@@ -183,10 +187,12 @@ public class GameManager : MonoBehaviour
         };
         TurnSystem.OnSkillExecute += (playerId) =>
         {
+            turnUi.OnSubTurnUpdate();
             TrunDone();
         };
         TurnSystem.OnSkillPhaseEnd += () =>
         {
+            turnUi.OnSubTurnUpdate();
             // 버프 1턴 당기기
             foreach (var playerState in PlayerList)
             {
@@ -195,6 +201,7 @@ public class GameManager : MonoBehaviour
         };
         TurnSystem.OnTurnEnd += () =>
         {
+            turnUi.OnSubTurnUpdate();
             // 게임 종료
             Debug.Log("End Game !!!");
         };
@@ -420,5 +427,12 @@ public class GameManager : MonoBehaviour
             PrefabDict.Add(path, prefab);
         }
         return PrefabDict[path];    
+    }
+
+    public bool IsWin()
+    {
+        if (GetPlayerState(PlayerId).IsDead())
+            return false;
+        return true;
     }
 }
