@@ -166,7 +166,6 @@ public class GameManager : MonoBehaviour
         };
         TurnSystem.OnSkillPhaseStart += (playerId) =>
         {
-            var playerState = PlayerList.Find(p => p.PlayerID == playerId);
             if (TurnSystem.GetCurrentPlayerId() == PlayerId)
             {
                 // 내 플레이어인 경우
@@ -178,7 +177,7 @@ public class GameManager : MonoBehaviour
             {
                 // ai 플레이어인 경우
                 // PlayerController.AutoSkill(playerState);
-                // 가장 강한 스킬부터 때려 붙는다.
+                // 가장 강한 스킬부터 셋팅.
                 TrunDone();
             }
         };
@@ -186,13 +185,18 @@ public class GameManager : MonoBehaviour
         {
             TrunDone();
         };
-        TurnSystem.OnTurnEnd += () =>
+        TurnSystem.OnSkillPhaseEnd += () =>
         {
             // 버프 1턴 당기기
             foreach (var playerState in PlayerList)
             {
                 playerState.TurnUpdate();
             }
+        };
+        TurnSystem.OnTurnEnd += () =>
+        {
+            // 게임 종료
+            Debug.Log("End Game !!!");
         };
         TurnSystem.IsSkillEnd += () =>
         {
@@ -211,9 +215,12 @@ public class GameManager : MonoBehaviour
 
     public void TrunDone()
     {
+        var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
+        if (playerState.IsDead()) 
+            EndTurn();
+        
         if (TurnSystem.GetCurrentPhase() == TurnPhase.Move)
         {
-            var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
             if (playerState != null)
             {
                 if (playerState.PlayerID == PlayerId)
@@ -230,7 +237,6 @@ public class GameManager : MonoBehaviour
         }
         else if (TurnSystem.GetCurrentPhase() == TurnPhase.Skill)
         {
-            var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
             if (playerState != null)
             {
                 if (playerState.PlayerID == PlayerId)
@@ -248,7 +254,6 @@ public class GameManager : MonoBehaviour
         }
         else if (TurnSystem.GetCurrentPhase() == TurnPhase.SkillExecute)
         {
-            var playerState = PlayerList.Find(p => p.PlayerID == TurnSystem.GetCurrentPlayerId());
             if (playerState != null)
             {
                 if (playerState.SkillCodes.Count > 0)
@@ -262,6 +267,18 @@ public class GameManager : MonoBehaviour
                 {
                     EndTurn();
                 }
+                
+                // 게임 종료 체크한다.
+                int team = playerState.Team;
+                foreach (var state in PlayerList)
+                {
+                    if (state.Team != team && !state.IsDead())
+                    {
+                        return;
+                    }
+                }
+
+                TurnSystem.TurnEndPhase();
             }
         }
     }
@@ -338,6 +355,16 @@ public class GameManager : MonoBehaviour
     public PlayerState GetPlayerState(int playerId)
     {
         var state = PlayerList.Find(p => p.PlayerID == playerId);
+        if (state != null)
+        {
+            return state;
+        }
+        return null;
+    }
+    
+    public PlayerState GetPlayerState(Vector2Int position)
+    {
+        var state = PlayerList.Find(p => p.Position == position);
         if (state != null)
         {
             return state;

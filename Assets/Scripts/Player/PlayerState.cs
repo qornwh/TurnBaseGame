@@ -24,6 +24,20 @@ public class PlayerState : StateBase
             return move;
         }
     }
+
+    public override int Hp
+    {
+        get => _hp;
+        set
+        {
+            SetValue(ref _hp, value);
+            if (_hp <= 0)
+            {
+                OnDead();
+            }
+        }
+    }
+
     public LinkedList<int> SkillCodes { get; set; }
     public CharacterData CharacterData { get; set; }
     public List<PlayerBuffState> PlayerBuffStates { get; set; }
@@ -33,6 +47,7 @@ public class PlayerState : StateBase
     public event Action<int> OnSkillAction;
     public event Action OnAddSkillAction;
     public event Action OnRemoveSkillAction;
+    public event Action OnDeadAction;
 
     public PlayerState(int playerId, Vector2Int position, int team, bool isAi, CharacterData characterData)
     {
@@ -198,5 +213,10 @@ public class PlayerState : StateBase
             idx++;
         }
         OnRemoveSkillAction?.Invoke();
+    }
+
+    protected virtual void OnDead()
+    {
+        OnDeadAction?.Invoke();
     }
 }

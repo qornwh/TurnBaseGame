@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
         PlayerState.OnAutoMoveAction += AutoMove;
         PlayerState.OnAutoSkillAction += AutoSkill;
         PlayerState.OnSkillAction += PlaySkillAction;
+        PlayerState.OnDeadAction += () => Destroy(gameObject);
         gameObject.transform.position = position;
         
         // 프리팹 로드

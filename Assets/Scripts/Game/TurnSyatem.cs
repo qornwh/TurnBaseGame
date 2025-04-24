@@ -78,14 +78,13 @@ public class TurnSystem
   {
     currentPhase = TurnPhase.SkillEnd;
     OnSkillPhaseEnd?.Invoke();
-    TurnEndPhase();
+    StartTurn();
   }
 
   public void TurnEndPhase()
   {
     currentPhase = TurnPhase.End;
     OnTurnEnd?.Invoke();
-    StartTurn();
   }
 
   public void EndTurn()

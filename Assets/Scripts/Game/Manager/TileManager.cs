@@ -134,7 +134,7 @@ public class TileManager
         }
     }
 
-    public void SkillPointerList(int curX, int curY, in int[,] range, List<Vector2Int> list)
+    public void SkillPointerList(int curX, int curY, in int[,] range, List<Vector2Int> list, List<Vector2Int> players = null)
     {
         for (int y = 0; y < range.GetLength(0); y++)
         {
@@ -148,11 +148,16 @@ public class TileManager
                 if (range[y,x] == 0) continue;
                 var state = ViewBlockStates[relativeY][relativeX];
                 list.Add(state.Position);
+                if (players != null)
+                {
+                    if (RootBlockStates[relativeY][relativeX].Type == BlockType.Player) 
+                        players.Add(state.Position);
+                }
             }
         }
     }
 
-    public bool TriggerPosition(int curX, int curY, in int[,] range, Vector2Int targetPosition)
+    public bool TriggerTargetPosition(int curX, int curY, in int[,] range, Vector2Int targetPosition)
     {
         for (int y = 0; y < range.GetLength(0); y++)
         {

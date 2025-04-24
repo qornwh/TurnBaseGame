@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
                 
                 Vector2Int target = new Vector2Int(0, 0);
                 GetEnemyPos(playerState, ref target);
-                if (_tileManager.TriggerPosition(relativeX, relativeY, skill.levelRange[playerState.SkillLevel].range, target))
+                if (_tileManager.TriggerTargetPosition(relativeX, relativeY, skill.levelRange[playerState.SkillLevel].range, target))
                 {
                     pq.Enqueue((AttackEffect)skill);
                 }
@@ -178,13 +178,15 @@ public class PlayerController : MonoBehaviour
     {
         var gm = GameInstance.GetInstance().GameManager;
         var gdm = gm.GameDataManager;
-        
-        var skillLevel = gdm.GetSkill(skillCode).levelRange[playerState.SkillLevel];
+
+        var skill = gdm.GetSkill(skillCode);
+        var skillLevel = skill.levelRange[playerState.SkillLevel];
         int relativeX = playerState.Position.x - skillLevel.center[0];
         int relativeY = playerState.Position.y - skillLevel.center[1];
         
         List<Vector2Int> tilePositions = new List<Vector2Int>();
-        _tileManager.SkillPointerList(relativeX, relativeY, skillLevel.range, tilePositions);
+        List<Vector2Int> playerPositions = new List<Vector2Int>();
+        _tileManager.SkillPointerList(relativeX, relativeY, skillLevel.range, tilePositions, playerPositions);
         
         List<Vector3> positions = new List<Vector3>();
         foreach (var position in tilePositions) 
@@ -193,5 +195,21 @@ public class PlayerController : MonoBehaviour
         }
         
         _skillExecute.StartSkill(skillCode, positions);
+        
+        // 데미지 계산
+        foreach (var position in playerPositions)
+        {
+            PlayerState onther = gm.GetPlayerState(position);
+            Vector2Int skillPosition = new Vector2Int(position.x - relativeX, position.y - relativeY);
+
+            if (skill.type == SkillType.Attack)
+            {
+                if (onther != null && playerState.Team != onther.Team)
+                {
+                    float damageRatio = ((float)skillLevel.range[skillPosition.x, skillPosition.y] / 100);
+                    onther.Hp -= (int)(((AttackEffect) skill).damage * damageRatio);
+                }
+            }
+        }
     }
 }
