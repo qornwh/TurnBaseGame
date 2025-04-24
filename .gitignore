@@ -79,3 +79,5 @@ crashlytics-build.properties
 /[Aa]ssets/Resources/GameResources/
 /[Aa]ssets/Resources/GameFxResources/
 /[Aa]ssets/Resources/GameUiResources/
+# 폰트또한 용량이 크다 제외
+/[Aa]ssets/Resources/Fonts/
