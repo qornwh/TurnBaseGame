@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (onther != null && playerState.Team != onther.Team)
                 {
-                    float damageRatio = ((float)skillLevel.range[skillPosition.x, skillPosition.y] / 100);
+                    float damageRatio = ((float)skillLevel.range[skillPosition.y, skillPosition.x] / 100);
                     onther.Hp -= (int)(((AttackEffect) skill).damage * damageRatio);
                 }
             }

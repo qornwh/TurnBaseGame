@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private HpBar hpBar;
     private PlayerController _playerController;
     public PlayerState PlayerState { get; set; }
     public int PlayerId { get; set; }
@@ -29,6 +30,13 @@ public class Player : MonoBehaviour
         // 프리팹 로드
         var gm = GameInstance.GetInstance().GameManager;
         SetCharacterPrefab(gm.LoadPrefab(PlayerState.CharacterData.Path));
+        
+        // hp 설정
+        if (gm.PlayerId != PlayerState.PlayerID)
+        {
+            hpBar.gameObject.SetActive(true);
+            hpBar.Init(PlayerState);
+        }
     }
 
     public void SetCharacterPrefab(GameObject prefab)
@@ -37,7 +45,6 @@ public class Player : MonoBehaviour
         {
             Destroy(currentPrefab);
         }
-        
         currentPrefab = Instantiate(prefab, gameObject.transform);
     }
 

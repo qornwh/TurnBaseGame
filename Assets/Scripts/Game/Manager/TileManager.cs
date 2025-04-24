@@ -113,9 +113,10 @@ public class TileManager
             for (int x = 0; x <= distance * 2; x++)
             {
                 int relativeX = curX + x;
+                if (curX == x && curY == y) continue;
                 if (relativeX < 0 || relativeX >= colSize) continue;
                 if (Mathf.Abs(x - distance) + Mathf.Abs(y - distance) > distance) continue; // 맨해튼 거리
-                if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty && curX != x && curY != y) continue;
+                if (RootBlockStates[relativeY][relativeX].Type != BlockType.Empty) continue;
                 var state = ViewBlockStates[relativeY][relativeX];
                 state.Type = BlockType.MoveDst;
             }
