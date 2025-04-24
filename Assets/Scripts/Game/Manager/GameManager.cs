@@ -197,6 +197,7 @@ public class GameManager : MonoBehaviour
             foreach (var playerState in PlayerList)
             {
                 playerState.TurnUpdate();
+                playerState.ManaRegen();
             }
         };
         TurnSystem.OnTurnEnd += () =>
@@ -337,7 +338,7 @@ public class GameManager : MonoBehaviour
         int deviceWidth = Screen.width;
         int deviceHeight = Screen.height;
 
-        Screen.SetResolution(setWidth, (int)((float)deviceHeight / deviceWidth * setWidth), true);
+        Screen.SetResolution(setWidth, (int)((float)deviceHeight / deviceWidth * setWidth), false);
 
         if ((float)setWidth / setHight < (float)deviceWidth / deviceHeight)
         {

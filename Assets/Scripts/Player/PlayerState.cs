@@ -9,6 +9,7 @@ public class PlayerState : StateBase
     public int PlayerID { get; set; }
     public int MaxHp { get; set; }
     public int MaxMp { get; set; }
+    public int MpRegen { get; set; }
     public Vector2Int Position { get; set; }
     public int Team { get; set; }
     public bool IsAi { get; set; }
@@ -60,6 +61,7 @@ public class PlayerState : StateBase
         Hp = characterData.hp;
         MaxMp = characterData.mp;
         Mp = characterData.mp;
+        MpRegen = characterData.mpRegen;
         Sh = characterData.sh;
         Move = characterData.move;
         SkillLevel = 0;
@@ -218,5 +220,12 @@ public class PlayerState : StateBase
     protected virtual void OnDead()
     {
         OnDeadAction?.Invoke();
+    }
+
+    public void ManaRegen()
+    {
+        Mp += MpRegen;
+        if (Mp >= MaxMp)
+            Mp = MaxMp;
     }
 }
