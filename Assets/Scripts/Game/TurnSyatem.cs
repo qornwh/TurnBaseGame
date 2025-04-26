@@ -78,6 +78,7 @@ public class TurnSystem
   {
     currentPhase = TurnPhase.SkillEnd;
     OnSkillPhaseEnd?.Invoke();
+    isForwardOrder = !isForwardOrder; // 1 ~ n / n ~ 1로 순서 바꿈
     StartTurn();
   }
 
@@ -180,6 +181,7 @@ public class TurnSystem
     return currentPhase;
   }
 
+  // 몇번째 턴인지 반환
   public int GetCurrentTurnCount()
   {
     return currentTurnCount;

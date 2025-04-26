@@ -167,6 +167,10 @@ public class GameManager : MonoBehaviour
                 TrunDone();
             }
         };
+        TurnSystem.OnMovePhaseEnd += () =>
+        {
+            // 플레이어 이동완료
+        };
         TurnSystem.OnSkillPhaseStart += (playerId) =>
         {
             turnUi.OnSubTurnUpdate();
@@ -179,9 +183,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                // ai 플레이어인 경우
-                // PlayerController.AutoSkill(playerState);
-                // 가장 강한 스킬부터 셋팅.
                 TrunDone();
             }
         };
@@ -202,9 +203,8 @@ public class GameManager : MonoBehaviour
         };
         TurnSystem.OnTurnEnd += () =>
         {
-            turnUi.OnSubTurnUpdate();
             // 게임 종료
-            Debug.Log("End Game !!!");
+            turnUi.OnSubTurnUpdate();
         };
         TurnSystem.IsSkillEnd += () =>
         {
