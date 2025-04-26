@@ -35,7 +35,7 @@ ___
 
 ### 모듈 구현
  - 게임 구현에 사용되는 utills 모듈 구현
- - a*알고리즘에서 사용되는 **우선순위 큐** 구현 : [코드링크](https://github.com/qornwh/TurnBaseGame/blob/58fd5106fbeff231a1249fd9fd07f799d4b9fa3f/Assets/Scripts/Utills/PriorityQueue.cs#L7)
+ - a*알고리즘에서 사용되는 **우선순위 큐** 구현 ([코드링크](https://github.com/qornwh/TurnBaseGame/blob/58fd5106fbeff231a1249fd9fd07f799d4b9fa3f/Assets/Scripts/Utills/PriorityQueue.cs#L7))
 
 ---
 
