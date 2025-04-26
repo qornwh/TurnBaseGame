@@ -17,13 +17,13 @@ ___
    - 이와 같은 설계를 선택한 이유는 상태변화로 게임을 업데이트 하는것 보다. 좀더 유연하고 이벤트 구독을 변경할수 있는 구조와 유지보수가 쉽도록 구성했습니다.
 
 ### 적 ai설정
- - 좌표 평면에서 플레이어의 위치까지 제일 가까운 경로를 찾기 위해 a* 알고리즘을 사용했습니다. ([코드 링크](https://github.com/qornwh/TurnBaseGame/blob/58fd5106fbeff231a1249fd9fd07f799d4b9fa3f/Assets/Scripts/Player/PlayerController.cs#L96)
+ - 좌표 평면에서 플레이어의 위치까지 제일 가까운 경로를 찾기 위해 a* 알고리즘을 선택함 ([코드 링크](https://github.com/qornwh/TurnBaseGame/blob/58fd5106fbeff231a1249fd9fd07f799d4b9fa3f/Assets/Scripts/Player/PlayerController.cs#L96))
  - 공격 알고리즘
    1. 플레이어가 공격 범위에 있는지 판단
    2. 우선순위 큐로 mp를 사용가능한 가장 공격력이 높은 스킬부터 사용
 
 ### ui
- - PlayerUi : 현재 플레이어의 능력치 상태 확인창(playerState가 변경될 때 마다 업데이트 호출 : [코드 링크](https://github.com/qornwh/TurnBaseGame/blob/58fd5106fbeff231a1249fd9fd07f799d4b9fa3f/Assets/Scripts/Player/StateBase.cs#L48)
+ - PlayerUi : 현재 플레이어의 능력치 상태 확인창(playerState가 변경될 때 마다 업데이트 호출 ([코드 링크](https://github.com/qornwh/TurnBaseGame/blob/58fd5106fbeff231a1249fd9fd07f799d4b9fa3f/Assets/Scripts/Player/StateBase.cs#L48))
  - DoneUi : 플레이어의 이동, 스킬 선택 종료 이벤트 창
 <img src="./img/ui1.png" height="300"/>
  - 스킬 범위는 우상단 미니맵 확인가능
